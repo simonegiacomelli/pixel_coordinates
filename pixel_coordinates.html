@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<head>
+    <title>Get pixel coordinates</title>
+</head>
+<body>
+
+<label> Change loaded image:
+    <input id="selectedImg" list="list1" oninput="selectedImgOnChange()"/></label>
+<datalist id="list1">
+    <option value="I.png">
+    <option value="I1.jpg">
+    <option value="I2.jpg">
+    <option value="S.png">
+</datalist>
+<button onclick="btn1Click()">reset</button>
+<p>Pixel coordinate: <span id="msg">please click on the image</span></p>
+
+<img id="img" alt="" src="I.png"/>
+
+<script type="text/javascript">
+
+    const msg = document.getElementById("msg");
+    const selectedImg = document.getElementById("selectedImg");
+    const img = document.getElementById("img");
+    img.onmousedown = GetCoordinates;
+
+
+    function selectedImgOnChange(e) {
+        msg.innerHTML = '';
+        img.setAttribute('src', selectedImg.value);
+    }
+
+    function FindPosition(oElement) {
+        if (typeof (oElement.offsetParent) != "undefined") {
+            for (var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent) {
+                posX += oElement.offsetLeft;
+                posY += oElement.offsetTop;
+            }
+            return [posX, posY];
+        } else {
+            return [oElement.x, oElement.y];
+        }
+    }
+
+    function GetCoordinates(e) {
+        var PosX = 0;
+        var PosY = 0;
+        var ImgPos;
+        ImgPos = FindPosition(img);
+        if (!e) var e = window.event;
+        if (e.pageX || e.pageY) {
+            PosX = e.pageX;
+            PosY = e.pageY;
+        } else if (e.clientX || e.clientY) {
+            PosX = e.clientX + document.body.scrollLeft
+                + document.documentElement.scrollLeft;
+            PosY = e.clientY + document.body.scrollTop
+                + document.documentElement.scrollTop;
+        }
+        PosX = PosX - ImgPos[0];
+        PosY = PosY - ImgPos[1];
+        msg.innerHTML = `[${PosX}, ${PosY}, 1]`;
+    }
+
+    function btn1Click(e) {
+        selectedImg.value = '';
+    }
+</script>
+
+</body>
+</html>
