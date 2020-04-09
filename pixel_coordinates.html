@@ -19,12 +19,16 @@
 <p>Pixel coordinate: <span id="msg">please click on the image</span></p>
 
 <img id="img" alt="" src="I.png"/>
+<br>
+<textarea id="log" rows="40">
 
+</textarea>
 <script type="text/javascript">
 
     const msg = document.getElementById("msg");
     const selectedImg = document.getElementById("selectedImg");
     const img = document.getElementById("img");
+    const log = document.getElementById("log");
     img.onmousedown = GetCoordinates;
 
 
@@ -62,12 +66,27 @@
         }
         PosX = PosX - ImgPos[0];
         PosY = PosY - ImgPos[1];
-        msg.innerHTML = `[${PosX}, ${PosY}, 1]`;
+        let str = `[${PosX}, ${PosY}, 1]`;
+        msg.innerHTML = str;
+        copyToClipboard(str);
+        log.value = log.value + str + ",\n" ;
     }
 
     function btn1Click(e) {
         selectedImg.value = '';
     }
+
+    function copyToClipboard(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    };
 </script>
 
 </body>
